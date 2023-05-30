@@ -399,6 +399,24 @@ class RenderEditor extends RenderEditableContainerBox
     }
   }
 
+  void updateSelectPositionAt({
+    required TextPosition from,
+    required Offset to,
+    required SelectionChangedCause cause,
+  }) {
+    // _layoutText(minWidth: constraints.minWidth, maxWidth: constraints.maxWidth);
+    if (onSelectionChanged == null) {
+      return;
+    }
+    final toPosition = getPositionForOffset(to);
+
+    _selectPositionAt(
+      from: from,
+      to: toPosition,
+      cause: cause,
+    );
+  }
+
   @override
   void selectPositionAt({
     required Offset from,
@@ -412,17 +430,34 @@ class RenderEditor extends RenderEditableContainerBox
     final fromPosition = getPositionForOffset(from);
     final toPosition = to == null ? null : getPositionForOffset(to);
 
-    var baseOffset = fromPosition.offset;
-    var extentOffset = fromPosition.offset;
-    if (toPosition != null) {
-      baseOffset = math.min(fromPosition.offset, toPosition.offset);
-      extentOffset = math.max(fromPosition.offset, toPosition.offset);
+    _selectPositionAt(
+      from: fromPosition,
+      to: toPosition,
+      cause: cause,
+    );
+  }
+
+  void _selectPositionAt({
+    required TextPosition from,
+    TextPosition? to,
+    required SelectionChangedCause cause,
+  }) {
+    // _layoutText(minWidth: constraints.minWidth, maxWidth: constraints.maxWidth);
+    if (onSelectionChanged == null) {
+      return;
+    }
+
+    var baseOffset = from.offset;
+    var extentOffset = from.offset;
+    if (to != null) {
+      baseOffset = math.min(from.offset, to.offset);
+      extentOffset = math.max(from.offset, to.offset);
     }
 
     final newSelection = TextSelection(
       baseOffset: baseOffset,
       extentOffset: extentOffset,
-      affinity: fromPosition.affinity,
+      affinity: from.affinity,
     );
     // Call [onSelectionChanged] only when the selection actually changed.
     _handleSelectionChange(newSelection, cause);

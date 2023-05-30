@@ -736,7 +736,6 @@ class RawEditorState extends EditorState
 
   // Cursors
   CursorController? _cursorController;
-  FloatingCursorController? _floatingCursorController;
 
   // Keyboard
   late keyboard.KeyboardListener _keyboardListener;
@@ -1064,7 +1063,7 @@ class RawEditorState extends EditorState
     SchedulerBinding.instance.addPostFrameCallback((Duration _) {
       _showCaretOnScreenScheduled = false;
 
-      final viewport = RenderAbstractViewport.of(renderEditor)!;
+      final viewport = RenderAbstractViewport.of(renderEditor);
       final editorOffset =
           renderEditor.localToGlobal(Offset(0.0, 0.0), ancestor: viewport);
       final offsetInViewport = _scrollController!.offset + editorOffset.dy;
@@ -1334,6 +1333,11 @@ class RawEditorState extends EditorState
   @override
   void performSelector(String selectorName) {
     // TODO: implement performSelector
+  }
+  
+  @override
+  void insertContent(KeyboardInsertedContent content) {
+    // TODO: implement insertContent
   }
 }
 
