@@ -97,8 +97,7 @@ class CursorStyle {
   }
 
   @override
-  int get hashCode => hashValues(color, backgroundColor, width, height, radius,
-      offset, opacityAnimates, paintAboveText);
+  int get hashCode => Object.hash(color, backgroundColor, width, height, radius, offset, opacityAnimates, paintAboveText);
 }
 
 /// Controls cursor of an editable widget.
